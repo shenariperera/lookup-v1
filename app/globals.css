@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+
+  /* Font Family */
+  --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+  /* Primary Colors (Teal) */
+  --color-primary-50: #f0f9fb;
+  --color-primary-100: #d9f0f5;
+  --color-primary-200: #b3e1eb;
+  --color-primary-300: #8dd2e1;
+  --color-primary-400: #4db4cc;
+  --color-primary-500: #1985a1; /* Main brand color */
+  --color-primary-600: #166b85; /* Hover states */
+  --color-primary-700: #125669;
+  --color-primary-800: #0d404d;
+  --color-primary-900: #082b34;
+
+  /* Secondary Colors (Coral) */
+  --color-secondary-50: #fef2f0;
+  --color-secondary-100: #fde4e0;
+  --color-secondary-200: #fbc9c1;
+  --color-secondary-300: #f9aea2;
+  --color-secondary-400: #f47864;
+  --color-secondary-500: #f04124; /* Hot deals, urgent CTAs */
+  --color-secondary-600: #d3371d;
+  --color-secondary-700: #a72c17;
+  --color-secondary-800: #7a2011;
+  --color-secondary-900: #4e150b;
+
+  /* Success (Green) */
+  --color-success-50: #f0fdf4;
+  --color-success-100: #dcfce7;
+  --color-success-200: #bbf7d0;
+  --color-success-300: #86efac;
+  --color-success-400: #4ade80;
+  --color-success-500: #10b981;
+  --color-success-600: #059669;
+  --color-success-700: #047857;
+  --color-success-800: #065f46;
+  --color-success-900: #064e3b;
+
+  /* Warning (Orange) */
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-200: #fde68a;
+  --color-warning-300: #fcd34d;
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+  --color-warning-800: #92400e;
+  --color-warning-900: #78350f;
+
+  /* Error (Red) */
+  --color-error-50: #fef2f2;
+  --color-error-100: #fee2e2;
+  --color-error-200: #fecaca;
+  --color-error-300: #fca5a5;
+  --color-error-400: #f87171;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+  --color-error-700: #b91c1c;
+  --color-error-800: #991b1b;
+  --color-error-900: #7f1d1d;
+
+  /* Accent Yellow (CTA Buttons) */
+  --color-accent-50: #fffef0;
+  --color-accent-100: #fffbd6;
+  --color-accent-200: #fff7ad;
+  --color-accent-300: #fff284;
+  --color-accent-400: #ffe45b;
+  --color-accent-500: #ffce12; /* Main CTA color */
+  --color-accent-600: #e6b800;
+  --color-accent-700: #b38f00;
+  --color-accent-800: #806600;
+  --color-accent-900: #4d3d00;
+}
+
+
+body {
+  background-color: white;
+}
