@@ -88,14 +88,7 @@ export default function LoginPage() {
 
           {/* Bottom stat pills */}
           <div className="flex gap-6">
-            <div className="bg-white bg-opacity-10 rounded-lg px-4 py-3">
-              <p className="text-white text-2xl font-bold">500+</p>
-              <p className="text-primary-200 text-sm">Businesses</p>
-            </div>
-            <div className="bg-white bg-opacity-10 rounded-lg px-4 py-3">
-              <p className="text-white text-2xl font-bold">2K+</p>
-              <p className="text-primary-200 text-sm">Active Deals</p>
-            </div>
+            
           </div>
         </div>
       </div>
@@ -172,7 +165,7 @@ export default function LoginPage() {
                 placeholder="you@example.com"
                 required
                 autoComplete="email"
-                className="w-full h-11 px-4 bg-white border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-shadow"
+                className="w-full h-11 px-4 bg-white border border-gray-300 rounded-md text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-shadow"
               />
             </div>
 
@@ -196,7 +189,7 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   required
                   autoComplete="current-password"
-                  className="w-full h-11 px-4 pr-11 bg-white border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-shadow"
+                  className="w-full h-11 px-4 pr-11 bg-white border border-gray-300 rounded-md text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-shadow"
                 />
                 {/* Toggle visibility */}
                 <button
@@ -255,7 +248,7 @@ export default function LoginPage() {
           {/* Footer note */}
           <p className="mt-8 text-center text-xs text-gray-400">
             By signing in, you agree to our{' '}
-            <Link href="/tos" className="hover:text-primary-500 underline transition-colors">Terms of Service</Link>
+            <Link href="/terms" className="hover:text-primary-500 underline transition-colors">Terms of Service</Link>
             {' '}and{' '}
             <Link href="/privacy" className="hover:text-primary-500 underline transition-colors">Privacy Policy</Link>
           </p>
