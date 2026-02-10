@@ -16,11 +16,11 @@ export default function Button({
   
   // Variant styles
   const variants = {
-    primary: 'bg-primary-500 hover:bg-primary-600 text-white',
-    secondary: 'bg-white border-2 border-primary-500 text-primary-500 hover:bg-primary-50',
-    outline: 'bg-transparent border-2 border-gray-300 text-gray-700 hover:border-primary-500 hover:text-primary-500',
-    danger: 'bg-error-500 hover:bg-error-600 text-white',
-    accent: 'bg-accent-500 hover:bg-accent-600 text-gray-900 font-bold', // New yellow CTA button
+    primary: 'bg-primary-500 hover:bg-primary-600 cursor-pointer text-white',
+    secondary: 'bg-white border-2 border-primary-500 text-primary-500 hover:bg-primary-50 cursor-pointer',
+    outline: 'bg-transparent border-2 border-gray-300 text-gray-700 hover:border-primary-500 hover:text-primary-500 cursor-pointer',
+    danger: 'bg-error-500 hover:bg-error-600 text-white hover:cursor-pointer',
+    accent: 'bg-accent-500 hover:bg-accent-600 text-gray-900 font-bold cursor-pointer', // New yellow CTA button
   };
 
   // Size styles

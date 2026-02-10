@@ -4,27 +4,9 @@ import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
-import { createClient } from '@/lib/supabase/client';
 import Image from 'next/image';
 import { optimizeLogo, validateImageFile, getImagePreviewUrl, revokeImagePreviewUrl, uploadToR2 } from '@/lib/imageUpload';
-
-const CATEGORIES = [
-  'Food & Beverage',
-  'Retail & Shopping',
-  'Health & Wellness',
-  'Education & Training',
-  'Professional Services',
-  'Home & Garden',
-  'Automotive',
-  'Beauty & Spa',
-  'Entertainment',
-  'Technology & Electronics',
-  'Travel & Tourism',
-  'Real Estate',
-  'Finance & Insurance',
-  'Construction & Trades',
-  'Other',
-];
+import { CATEGORIES } from '@/lib/constants/categories';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -603,9 +585,10 @@ export default function RegisterPage() {
                   onBlur={handleBlur}
                   className={inputClass('category')}
                 >
-                  <option value="">Select a category</option>
                   {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
+                  <option key={cat} value={cat}>
+                      {cat}
+                  </option>
                   ))}
                 </select>
                 {errors.category && <p className="mt-1.5 text-xs text-error-500">{errors.category}</p>}
