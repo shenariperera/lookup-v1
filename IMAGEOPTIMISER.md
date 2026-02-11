@@ -18,8 +18,8 @@ npm install browser-image-compression
 **Quality:** 90% (high - logos need crisp text)  
 **Function:** `optimizeCompanyLogo(file)`
 
-### 2. Deal Images
-**Use:** DealCard images  
+### 2. Offer Images
+**Use:** OfferCard images  
 **Target Size:** 800x600px  
 **Max File Size:** 1MB  
 **Quality:** 85% (balanced)  
@@ -85,7 +85,7 @@ async function handleFileUpload(file) {
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `type` | string | 'deal' | Image type: 'logo', 'deal', 'banner', 'company' |
+| `type` | string | 'offer' | Image type: 'logo', 'offer', 'banner', 'company' |
 | `currentImage` | string | null | URL of existing image (for editing) |
 | `onImageSelect` | function | - | Callback when image is selected & optimized |
 | `onImageRemove` | function | - | Callback when image is removed |
@@ -105,11 +105,11 @@ async function handleFileUpload(file) {
 />
 ```
 
-### Deal Creation Form
+### Offer Creation Form
 ```jsx
 <ImageUpload
-  type="deal"
-  label="Deal Image"
+  type="offer"
+  label="Offer Image"
   helperText="Upload an image showcasing your offer"
   required
   onImageSelect={(file) => setDealImage(file)}
@@ -150,7 +150,7 @@ The utility includes built-in validation:
 2. **Original quality** - Upload high-quality originals; optimization happens automatically
 3. **Aspect ratios:**
    - Logos: Square (1:1)
-   - Deal images: Landscape (4:3)
+   - Offer images: Landscape (4:3)
    - Banners: Widescreen (16:9)
    - Company images: Square (1:1)
 
@@ -173,14 +173,14 @@ async function uploadDealImage(file, dealId) {
     
     // 3. Upload to Supabase Storage
     const { data, error } = await supabase.storage
-      .from('deal-images')
+      .from('offer-images')
       .upload(fileName, optimizedFile);
     
     if (error) throw error;
     
     // 4. Get public URL
     const { data: { publicUrl } } = supabase.storage
-      .from('deal-images')
+      .from('offer-images')
       .getPublicUrl(fileName);
     
     return publicUrl;

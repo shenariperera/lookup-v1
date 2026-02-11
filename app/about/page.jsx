@@ -14,7 +14,7 @@ export default function AboutPage() {
               About Lookup.lk
             </h1>
             <p className="text-xl text-primary-100">
-              Sri Lanka's Premier Business Directory & Deals Platform
+              Sri Lanka's Premier Business Directory & Offers Platform
             </p>
           </div>
         </section>
@@ -27,8 +27,8 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Mission</h2>
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
               At Lookup.lk, we're on a mission to connect Sri Lankan consumers with the best local businesses 
-              and help them discover amazing deals that save money. We believe every business deserves a platform 
-              to showcase their offerings, and every customer deserves access to the best deals in town.
+              and help them discover amazing offers that save money. We believe every business deserves a platform 
+              to showcase their offerings, and every customer deserves access to the best offers in town.
             </p>
             <p className="text-lg text-gray-700 leading-relaxed">
               Whether you're looking for restaurants, shopping, services, or entertainment, Lookup.lk is your 
@@ -43,9 +43,9 @@ export default function AboutPage() {
               <div className="bg-white rounded-lg shadow-md p-6">
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">For Customers</h3>
                 <p className="text-gray-700 leading-relaxed">
-                  Browse thousands of exclusive deals and offers from verified businesses across Sri Lanka. 
+                  Browse thousands of exclusive offers and offers from verified businesses across Sri Lanka. 
                   Save money on dining, shopping, services, entertainment, and more. Our platform makes it 
-                  easy to discover new businesses and find the best deals in your area.
+                  easy to discover new businesses and find the best offers in your area.
                 </p>
               </div>
 
@@ -53,8 +53,8 @@ export default function AboutPage() {
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">For Businesses</h3>
                 <p className="text-gray-700 leading-relaxed">
                   Register your business for free and reach thousands of potential customers. Post unlimited 
-                  deals and offers to attract new clients and grow your business. Our platform provides an 
-                  easy-to-use dashboard to manage your profile and track your deals.
+                  offers and offers to attract new clients and grow your business. Our platform provides an 
+                  easy-to-use dashboard to manage your profile and track your offers.
                 </p>
               </div>
             </div>
@@ -68,7 +68,7 @@ export default function AboutPage() {
                 <div className="text-primary-500 text-2xl mb-3">✓</div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">100% Free Listings</h3>
                 <p className="text-gray-600">
-                  No hidden fees. Register your business and post deals completely free.
+                  No hidden fees. Register your business and post offers completely free.
                 </p>
               </div>
 
@@ -84,7 +84,7 @@ export default function AboutPage() {
                 <div className="text-primary-500 text-2xl mb-3">✓</div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Easy to Use</h3>
                 <p className="text-gray-600">
-                  Simple, intuitive interface makes finding deals and managing listings effortless.
+                  Simple, intuitive interface makes finding offers and managing listings effortless.
                 </p>
               </div>
 
@@ -103,7 +103,7 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
               Lookup.lk was born from a simple idea: make it easier for Sri Lankans to discover great local 
-              businesses and amazing deals. We noticed that many fantastic businesses struggled to reach new 
+              businesses and amazing offers. We noticed that many fantastic businesses struggled to reach new 
               customers, while consumers spent hours searching for the best offers.
             </p>
             <p className="text-lg text-gray-700 leading-relaxed">
@@ -119,7 +119,7 @@ export default function AboutPage() {
               Ready to Get Started?
             </h2>
             <p className="text-gray-700 mb-6">
-              Whether you're a business owner or a deal hunter, join Lookup.lk today!
+              Whether you're a business owner or a offer hunter, join Lookup.lk today!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
@@ -129,10 +129,10 @@ export default function AboutPage() {
                 Register Your Business
               </a>
               <a 
-                href="/deals" 
+                href="/offers" 
                 className="bg-white border-2 border-primary-500 text-primary-500 hover:bg-primary-50 px-8 py-3 rounded-lg font-semibold transition-colors inline-block"
               >
-                Browse Deals
+                Browse Offers
               </a>
             </div>
           </section>

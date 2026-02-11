@@ -1,18 +1,18 @@
 # Lookup.lk - Project Documentation
 
 ## Project Overview
-Lookup.lk is a business directory and deals platform for Sri Lanka. 
-Users can browse businesses, discover deals/offers, and save money. 
-Businesses can register for free and post unlimited deals.
+Lookup.lk is a business directory and offers platform for Sri Lanka. 
+Users can browse businesses, discover offers/offers, and save money. 
+Businesses can register for free and post unlimited offers.
 
 ## MVP Features (Phase 1 - 8 weeks)
-- [x] Free business listings (up to 3 deals)
-- [x] Deals/offers posting
+- [x] Free business listings (up to 3 offers)
+- [x] Offers/offers posting
 - [x] Business directory
 - [x] Category pages & filters
 - [x] Homepage with listings
 - [x] Authentication (register/login)
-- [x] Company dashboard (manage profile & deals)
+- [x] Company dashboard (manage profile & offers)
 - [x] Admin panel (approve/manage)
 - [x] Static pages (About, Contact, T&C, Privacy)
 - [x] Search & filters
@@ -62,7 +62,7 @@ primary: {
 **Secondary (Coral): #f04124**
 ```javascript
 secondary: {
-  500: '#f04124',  // Hot deals, urgent CTAs
+  500: '#f04124',  // Hot offers, urgent CTAs
   600: '#d3371d',
 }
 ```
@@ -102,10 +102,10 @@ secondary: {
 </span>
 ```
 
-**Badge (Hot Deal):**
+**Badge (Hot Offer):**
 ```jsx
 <span className="bg-secondary-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-  🔥 Hot Deal
+  🔥 Hot Offer
 </span>
 ```
 
@@ -134,30 +134,30 @@ lookup/
 │   ├── page.js                    # Homepage
 │   ├── layout.js                  # Root layout
 │   ├── globals.css                # Global styles
-│   ├── deals/
-│   │   ├── page.js                # All deals
-│   │   ├── [slug]/page.js         # Single deal
+│   ├── offers/
+│   │   ├── page.js                # All offers
+│   │   ├── [slug]/page.js         # Single offer
 │   │   └── category/[category]/page.js
 │   ├── companies/
 │   │   ├── page.js                # All companies
 │   │   └── [slug]/page.js         # Company profile
 │   ├── dashboard/
 │   │   ├── page.js                # Dashboard home
-│   │   ├── deals/
-│   │   │   ├── page.js            # Manage deals
-│   │   │   └── new/page.js        # Create deal
+│   │   ├── offers/
+│   │   │   ├── page.js            # Manage offers
+│   │   │   └── new/page.js        # Create offer
 │   │   └── profile/page.js        # Edit profile
 │   ├── admin/
 │   │   ├── page.js                # Admin dashboard
 │   │   ├── companies/page.js
-│   │   └── deals/page.js
+│   │   └── offers/page.js
 │   ├── auth/
 │   │   ├── login/page.js
 │   │   └── register/page.js
 │   ├── about/page.js
 │   ├── contact/page.js
 │   └── api/
-│       ├── deals/route.js
+│       ├── offers/route.js
 │       ├── companies/route.js
 │       ├── auth/[...nextauth]/route.js
 │       └── upload/route.js
@@ -171,8 +171,8 @@ lookup/
 │   │   ├── Header.jsx
 │   │   ├── Footer.jsx
 │   │   └── Navbar.jsx
-│   ├── deals/
-│   │   ├── DealCard.jsx
+│   ├── offers/
+│   │   ├── OfferCard.jsx
 │   │   ├── DealGrid.jsx
 │   │   └── DealForm.jsx
 │   └── companies/
@@ -218,13 +218,13 @@ model Company {
   location    String?
   category    String?
   status      Status    @default(PENDING) // Admin approval required
-  deals       Deal[]
+  offers       Offer[]
   user        User?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
 
-model Deal {
+model Offer {
   id          String     @id @default(cuid())
   title       String
   slug        String     @unique
@@ -270,12 +270,12 @@ enum DealStatus {
 
 ## API Routes
 
-### Deals
-- `GET /api/deals` - List all approved deals
-- `POST /api/deals` - Create new deal
-- `GET /api/deals/[id]` - Get single deal
-- `PUT /api/deals/[id]` - Update deal
-- `DELETE /api/deals/[id]` - Delete deal
+### Offers
+- `GET /api/offers` - List all approved offers
+- `POST /api/offers` - Create new offer
+- `GET /api/offers/[id]` - Get single offer
+- `PUT /api/offers/[id]` - Update offer
+- `DELETE /api/offers/[id]` - Delete offer
 
 ### Companies
 - `GET /api/companies` - List all companies
@@ -287,7 +287,7 @@ enum DealStatus {
 - `GET /api/admin/companies/pending`
 - `PUT /api/admin/companies/[id]/approve` - Approve company
 - `PUT /api/admin/companies/[id]/suspend` - Suspend company
-- `PUT /api/admin/deals/[id]/disable` - For scam / abuse / policy violations
+- `PUT /api/admin/offers/[id]/disable` - For scam / abuse / policy violations
 
 ---
 
@@ -311,14 +311,14 @@ enum DealStatus {
 - [ ] Profile management
 - [ ] Image upload
 
-### Week 4: Deal Management
-- [ ] Create deal form
-- [ ] Edit deal
-- [ ] Deal list
+### Week 4: Offer Management
+- [ ] Create offer form
+- [ ] Edit offer
+- [ ] Offer list
 
-### Week 5: Public Deal Pages
-- [ ] All deals page
-- [ ] Deal detail page
+### Week 5: Public Offer Pages
+- [ ] All offers page
+- [ ] Offer detail page
 - [ ] Category pages
 
 ### Week 6: Business Directory
@@ -339,9 +339,9 @@ enum DealStatus {
 ## Coding Standards
 
 ### Naming Conventions
-- **Components:** PascalCase (DealCard.jsx)
+- **Components:** PascalCase (OfferCard.jsx)
 - **Functions:** camelCase (getDealBySlug)
-- **Files:** lowercase with dashes (deal-card.jsx) OR PascalCase for components
+- **Files:** lowercase with dashes (offer-card.jsx) OR PascalCase for components
 - **CSS classes:** Tailwind utilities only, no custom classes
 
 ### Component Structure

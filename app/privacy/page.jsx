@@ -58,7 +58,7 @@ export default function PrivacyPolicyPage() {
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">1.2 Business Information</h3>
                 <p className="text-gray-700 leading-relaxed">
                   For business accounts, we collect information about your business including company name, 
-                  description, category, logos, banners, and deal/offer details you post on our platform.
+                  description, category, logos, banners, and offer/offer details you post on our platform.
                 </p>
               </div>
 
@@ -91,7 +91,7 @@ export default function PrivacyPolicyPage() {
               <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
                 <li>To provide and maintain our service</li>
                 <li>To process your registration and create your account</li>
-                <li>To display your business information and deals to users</li>
+                <li>To display your business information and offers to users</li>
                 <li>To send you administrative communications and updates</li>
                 <li>To respond to your inquiries and provide customer support</li>
                 <li>To monitor and analyze usage patterns and trends</li>
@@ -110,7 +110,7 @@ export default function PrivacyPolicyPage() {
               <div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">3.1 Public Information</h3>
                 <p className="text-gray-700 leading-relaxed">
-                  Business profiles, deals, and offers you post are publicly visible to all users of Lookup.lk. 
+                  Business profiles, offers, and offers you post are publicly visible to all users of Lookup.lk. 
                   This includes your business name, description, contact information, and any images you upload.
                 </p>
               </div>

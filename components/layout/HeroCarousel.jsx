@@ -54,7 +54,7 @@ export default function HeroCarousel({ slides }) {
               {currentSlideData.primaryButtonText && (
                 <Button 
                   variant="accent" 
-                  href={currentSlideData.primaryButtonLink || '/deals'}
+                  href={currentSlideData.primaryButtonLink || '/offers'}
                   size="large"
                 >
                   {currentSlideData.primaryButtonText}

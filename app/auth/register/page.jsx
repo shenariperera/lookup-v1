@@ -326,13 +326,13 @@ export default function RegisterPage() {
               Grow your<br />business for free
             </h1>
             <p className="text-primary-200 text-lg leading-relaxed max-w-md">
-              List your business, post unlimited deals, and reach thousands of customers across Sri Lanka – completely free.
+              List your business, post unlimited offers, and reach thousands of customers across Sri Lanka – completely free.
             </p>
 
             <ul className="mt-6 space-y-3">
               {[
                 'Free business listing',
-                'Post unlimited deals & offers',
+                'Post unlimited offers & offers',
                 'Reach local customers easily',
                 'Simple dashboard to manage everything',
               ].map((item) => (
@@ -350,7 +350,7 @@ export default function RegisterPage() {
 
           <div className="bg-white bg-opacity-10 rounded-md px-5 py-4">
             <p className="text-primary-700 text-sm italic leading-relaxed">
-              "Listing on Lookup.lk brought us new customers within the first week. The deals feature is a game-changer."
+              "Listing on Lookup.lk brought us new customers within the first week. The offers feature is a game-changer."
             </p>
             <p className="text-white text-sm font-semibold mt-2">– Sarah J., Colombo Cafe</p>
           </div>

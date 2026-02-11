@@ -16,8 +16,8 @@ export default function DashboardPage() {
         const statsData = await statsRes.json();
         setStats(statsData);
 
-        // Fetch recent deals
-        const dealsRes = await fetch('/api/dashboard/recent-deals');
+        // Fetch recent offers
+        const dealsRes = await fetch('/api/dashboard/recent-offers');
         const dealsData = await dealsRes.json();
         setRecentDeals(dealsData);
       } catch (error) {
@@ -38,9 +38,9 @@ export default function DashboardPage() {
 
   const quickActions = [
     {
-      name: 'Create New Deal',
+      name: 'Create New Offer',
       description: 'Add a new offer to your listing',
-      href: '/dashboard/deals/new',
+      href: '/dashboard/offers/new',
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -60,9 +60,9 @@ export default function DashboardPage() {
       color: 'bg-secondary-500',
     },
     {
-      name: 'View All Deals',
+      name: 'View All Offers',
       description: 'Manage your offers',
-      href: '/dashboard/deals',
+      href: '/dashboard/offers',
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
@@ -91,7 +91,7 @@ export default function DashboardPage() {
       {/* Welcome Section */}
       <div>
         <h2 className="text-3xl font-bold text-gray-900">Welcome back!</h2>
-        <p className="mt-2 text-gray-600">Here's what's happening with your deals today.</p>
+        <p className="mt-2 text-gray-600">Here's what's happening with your offers today.</p>
       </div>
 
       {/* Stats Grid */}
@@ -99,7 +99,7 @@ export default function DashboardPage() {
         <div className="bg-white border border-gray-200 rounded-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Deals</p>
+              <p className="text-sm font-medium text-gray-600">Total Offers</p>
               <p className="mt-2 text-3xl font-bold text-gray-900">{statsDisplay.totalDeals}</p>
             </div>
             <div className="bg-primary-500 text-white p-3 rounded-md">
@@ -113,7 +113,7 @@ export default function DashboardPage() {
         <div className="bg-white border border-gray-200 rounded-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Active Deals</p>
+              <p className="text-sm font-medium text-gray-600">Active Offers</p>
               <p className="mt-2 text-3xl font-bold text-gray-900">{statsDisplay.activeDeals}</p>
             </div>
             <div className="bg-success-500 text-white p-3 rounded-md">
@@ -161,13 +161,13 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Recent Deals */}
+      {/* Recent Offers */}
       {recentDeals.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-gray-900">Recent Deals</h3>
+            <h3 className="text-xl font-bold text-gray-900">Recent Offers</h3>
             <Link
-              href="/dashboard/deals"
+              href="/dashboard/offers"
               className="text-sm font-medium text-primary-600 hover:text-primary-700"
             >
               View all →
@@ -178,7 +178,7 @@ export default function DashboardPage() {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Deal Title
+                    Offer Title
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
@@ -189,24 +189,24 @@ export default function DashboardPage() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {recentDeals.map((deal) => (
-                  <tr key={deal.id} className="hover:bg-gray-50">
+                {recentDeals.map((offer) => (
+                  <tr key={offer.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">{deal.title}</div>
+                      <div className="text-sm font-medium text-gray-900">{offer.title}</div>
                     </td>
                     <td className="px-6 py-4">
                       <span
                         className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
-                          deal.status === 'ACTIVE'
+                          offer.status === 'ACTIVE'
                             ? 'bg-success-100 text-success-800'
                             : 'bg-gray-100 text-gray-800'
                         }`}
                       >
-                        {deal.status === 'ACTIVE' ? 'Active' : 'Expired'}
+                        {offer.status === 'ACTIVE' ? 'Active' : 'Expired'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-600">
-                      {new Date(deal.endDate).toLocaleDateString()}
+                      {new Date(offer.endDate).toLocaleDateString()}
                     </td>
                   </tr>
                 ))}
@@ -227,7 +227,7 @@ export default function DashboardPage() {
           <div className="flex-1">
             <h4 className="text-sm font-semibold text-warning-900">Account Pending Approval</h4>
             <p className="mt-1 text-sm text-warning-700">
-              Your company profile is currently under review by our admin team. You can create and manage deals,
+              Your company profile is currently under review by our admin team. You can create and manage offers,
               but they won't be visible to the public until your account is approved.
             </p>
           </div>

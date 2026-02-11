@@ -39,7 +39,7 @@ model Company {
   tiktok      String?
   linkedin    String?
   status      Status   @default(PENDING)
-  deals       Deal[]
+  offers       Offer[]
   user        User?
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
@@ -47,7 +47,7 @@ model Company {
   @@map("companies")
 }
 
-model Deal {
+model Offer {
   id          String     @id @default(cuid())
   title       String
   slug        String     @unique
@@ -64,7 +64,7 @@ model Deal {
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime   @updatedAt @map("updated_at")
 
-  @@map("deals")
+  @@map("offers")
 }
 
 model Category {

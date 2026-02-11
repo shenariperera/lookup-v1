@@ -24,7 +24,7 @@ export default function HeaderSearch() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      const path = searchType === 'offers' ? '/deals' : '/companies';
+      const path = searchType === 'offers' ? '/offers' : '/companies';
       router.push(`${path}?search=${encodeURIComponent(searchQuery)}`);
     }
   };

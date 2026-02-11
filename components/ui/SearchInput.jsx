@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 export default function SearchInput({ 
-  placeholder = "Search for deals, companies, categories...",
+  placeholder = "Search for offers, companies, categories...",
   onSearch,
   className = ""
 }) {

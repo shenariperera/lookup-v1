@@ -266,10 +266,10 @@ export default function ContactPage() {
 
               <div className="bg-white rounded-lg shadow-md p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Can I post unlimited deals?
+                  Can I post unlimited offers?
                 </h3>
                 <p className="text-gray-600">
-                  Yes! Once your business is approved, you can post and manage unlimited deals through 
+                  Yes! Once your business is approved, you can post and manage unlimited offers through 
                   your dashboard at no cost.
                 </p>
               </div>

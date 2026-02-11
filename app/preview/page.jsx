@@ -4,7 +4,7 @@ import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
 import SearchInput from '@/components/ui/SearchInput';
-import DealCard from '@/components/deals/DealCard';
+import OfferCard from '@/components/offers/OfferCard';
 import CompanyCard from '@/components/companies/CompanyCard';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -46,10 +46,10 @@ export default function ComponentPreview() {
           <HeroCarousel 
             slides={[
               {
-                title: "Discover Amazing Deals Across Sri Lanka",
+                title: "Discover Amazing Offers Across Sri Lanka",
                 description: "Browse thousands of exclusive offers from top businesses. Save money on restaurants, shopping, services, and more!",
-                primaryButtonText: "Browse All Deals",
-                primaryButtonLink: "/deals",
+                primaryButtonText: "Browse All Offers",
+                primaryButtonLink: "/offers",
                 secondaryButtonText: "Register Your Business",
                 secondaryButtonLink: "/auth/register",
                 image: null // Will show placeholder
@@ -58,7 +58,7 @@ export default function ComponentPreview() {
                 title: "50% Off All Electronics",
                 description: "Limited time offer! Get massive discounts on laptops, phones, tablets and accessories from trusted retailers.",
                 primaryButtonText: "Shop Electronics",
-                primaryButtonLink: "/deals/electronics",
+                primaryButtonLink: "/offers/electronics",
                 secondaryButtonText: "View All Categories",
                 secondaryButtonLink: "/categories",
                 image: null
@@ -67,7 +67,7 @@ export default function ComponentPreview() {
                 title: "Free Delivery on Orders Over Rs. 5000",
                 description: "Shop from your favorite stores and get free home delivery. Valid for all participating merchants across Colombo.",
                 primaryButtonText: "Start Shopping",
-                primaryButtonLink: "/deals",
+                primaryButtonLink: "/offers",
                 image: null
               }
             ]}
@@ -145,7 +145,7 @@ export default function ComponentPreview() {
               <div className="flex flex-wrap gap-3">
                 <Badge variant="default">Default</Badge>
                 <Badge variant="featured">⭐ Featured</Badge>
-                <Badge variant="hot">🔥 Hot Deal</Badge>
+                <Badge variant="hot">🔥 Hot Offer</Badge>
                 <Badge variant="success">✓ Active</Badge>
                 <Badge variant="warning">⚠ Pending</Badge>
                 <Badge variant="error">✕ Expired</Badge>
@@ -167,7 +167,7 @@ export default function ComponentPreview() {
             <div>
               <h3 className="text-lg font-semibold text-gray-700 mb-3">Common Use Cases</h3>
               <div className="flex flex-wrap gap-3">
-                <Badge variant="featured">⭐ Featured Deal</Badge>
+                <Badge variant="featured">⭐ Featured Offer</Badge>
                 <Badge variant="hot">🔥 50% OFF</Badge>
                 <Badge variant="success">New</Badge>
                 <Badge variant="default">Electronics</Badge>
@@ -187,7 +187,7 @@ export default function ComponentPreview() {
             <div>
               <h3 className="text-lg font-semibold text-gray-700 mb-3">Default Search Bar</h3>
               <SearchInput 
-                placeholder="Search for deals, companies, categories..."
+                placeholder="Search for offers, companies, categories..."
                 onSearch={(query) => alert(`Searching for: ${query}`)}
               />
             </div>
@@ -251,18 +251,18 @@ export default function ComponentPreview() {
               </div>
             </div>
 
-            {/* Deal Card Example */}
+            {/* Offer Card Example */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-700 mb-3">Example: Deal Card</h3>
+              <h3 className="text-lg font-semibold text-gray-700 mb-3">Example: Offer Card</h3>
               <Card>
                 <div className="flex gap-3 mb-3">
                   <Badge variant="featured">⭐ Featured</Badge>
-                  <Badge variant="hot">🔥 Hot Deal</Badge>
+                  <Badge variant="hot">🔥 Hot Offer</Badge>
                 </div>
                 <h4 className="text-xl font-bold text-gray-900 mb-2">50% Off All Pizza</h4>
                 <p className="text-gray-600 mb-4">Get half price on any large pizza. Valid until end of month.</p>
                 <div className="flex gap-3">
-                  <Button variant="primary">View Deal</Button>
+                  <Button variant="primary">View Offer</Button>
                   <Button variant="secondary">Save</Button>
                 </div>
               </Card>
@@ -270,68 +270,68 @@ export default function ComponentPreview() {
           </div>
         </Card>
 
-        {/* DealCard Component */}
+        {/* OfferCard Component */}
         <Card className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Deal Cards (Final Design)</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Offer Cards (Final Design)</h2>
           <p className="text-gray-600 mb-6">
             Clean, simple cards with yellow "View Offer" button - just like the competitor!
           </p>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {/* Deal 1 */}
-            <DealCard
+            {/* Offer 1 */}
+            <OfferCard
               title="Enjoy Up to 11.67% p.a. on AMF Fixed Deposits!"
               companyName="Associated Motor Finance"
-              href="/deals/amf-fixed-deposits"
+              href="/offers/amf-fixed-deposits"
             />
 
-            {/* Deal 2 */}
-            <DealCard
+            {/* Offer 2 */}
+            <OfferCard
               title="Free Frame and Buy 1 Get 1 FREE Sunglasses!!"
               companyName="Choice.lk - Eyewear"
-              href="/deals/sunglasses-bogo"
+              href="/offers/sunglasses-bogo"
             />
 
-            {/* Deal 3 */}
-            <DealCard
+            {/* Offer 3 */}
+            <OfferCard
               title="Education dreams made possible with Commercial Bank"
               companyName="Commercial Bank of Ceylon PLC"
-              href="/deals/education-loan"
+              href="/offers/education-loan"
             />
 
-            {/* Deal 4 */}
-            <DealCard
+            {/* Offer 4 */}
+            <OfferCard
               title="50% Off All Pizza - Limited Time Only"
               companyName="Pizza Palace"
-              href="/deals/pizza-sale"
+              href="/offers/pizza-sale"
             />
 
-            {/* Deal 5 */}
-            <DealCard
+            {/* Offer 5 */}
+            <OfferCard
               title="Buy 1 Get 1 Free - All Burgers"
               companyName="Burger King LK"
-              href="/deals/burger-bogo"
+              href="/offers/burger-bogo"
             />
 
-            {/* Deal 6 */}
-            <DealCard
+            {/* Offer 6 */}
+            <OfferCard
               title="Free Delivery on Orders Over Rs. 5000"
               companyName="SuperMart Online"
-              href="/deals/free-delivery"
+              href="/offers/free-delivery"
             />
 
-            {/* Deal 7 */}
-            <DealCard
+            {/* Offer 7 */}
+            <OfferCard
               title="25% Off All Spa Treatments This Month"
               companyName="Serenity Spa"
-              href="/deals/spa-discount"
+              href="/offers/spa-discount"
             />
 
-            {/* Deal 8 */}
-            <DealCard
+            {/* Offer 8 */}
+            <OfferCard
               title="2 for 1 Movie Tickets - Weekdays Only"
               companyName="Cinema City"
-              href="/deals/movie-promo"
+              href="/offers/movie-promo"
             />
           </div>
         </Card>
@@ -394,17 +394,17 @@ export default function ComponentPreview() {
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Usage Examples</h2>
           
           <div className="space-y-6">
-            {/* DealCard Usage */}
+            {/* OfferCard Usage */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">DealCard</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">OfferCard</h3>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <pre className="text-sm overflow-x-auto">
-{`<DealCard
+{`<OfferCard
   title="Free Frame and Buy 1 Get 1 FREE Sunglasses!!"
   companyName="Choice.lk - Eyewear"
   companyLogo="/logos/choice-eyewear.png" // optional
-  image="/deals/sunglasses-promo.jpg" // optional
-  href="/deals/sunglasses-bogo"
+  image="/offers/sunglasses-promo.jpg" // optional
+  href="/offers/sunglasses-bogo"
 />`}
                 </pre>
               </div>
@@ -436,10 +436,10 @@ export default function ComponentPreview() {
 {`<HeroCarousel 
   slides={[
     {
-      title: "Discover Amazing Deals",
+      title: "Discover Amazing Offers",
       description: "Browse thousands of exclusive offers...",
-      primaryButtonText: "Browse Deals",
-      primaryButtonLink: "/deals",
+      primaryButtonText: "Browse Offers",
+      primaryButtonLink: "/offers",
       secondaryButtonText: "Register", // optional
       secondaryButtonLink: "/auth/register", // optional
       image: "/banners/hero-1.jpg" // optional
@@ -448,7 +448,7 @@ export default function ComponentPreview() {
       title: "50% Off Electronics",
       description: "Limited time offer...",
       primaryButtonText: "Shop Now",
-      primaryButtonLink: "/deals/electronics"
+      primaryButtonLink: "/offers/electronics"
     }
   ]}
 />`}

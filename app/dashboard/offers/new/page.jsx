@@ -65,7 +65,7 @@ export default function NewDealPage() {
       setCoverPreview(previewUrl);
 
       // Upload to R2
-      const url = await optimizeAndUpload(file, 'deal', 'deal-images');
+      const url = await optimizeAndUpload(file, 'offer', 'offer-images');
       
       setFormData(prev => ({
         ...prev,
@@ -144,7 +144,7 @@ export default function NewDealPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/deals', {
+      const response = await fetch('/api/offers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -155,14 +155,14 @@ export default function NewDealPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to create deal');
+        throw new Error(data.message || 'Failed to create offer');
       }
       
-      // Redirect to deals list
-      router.push('/dashboard/deals');
+      // Redirect to offers list
+      router.push('/dashboard/offers');
       router.refresh();
     } catch (error) {
-      console.error('Failed to create deal:', error);
+      console.error('Failed to create offer:', error);
       setErrors(prev => ({ ...prev, submit: error.message }));
     } finally {
       setLoading(false);
@@ -173,16 +173,16 @@ export default function NewDealPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-3xl font-bold text-gray-900">Create New Deal</h2>
+        <h2 className="text-3xl font-bold text-gray-900">Create New Offer</h2>
         <p className="mt-2 text-gray-600">Fill in the details below to create a new offer</p>
       </div>
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Deal Title */}
+        {/* Offer Title */}
         <div className="bg-white border border-gray-200 rounded-md p-6">
           <label className="block text-sm font-semibold text-gray-900 mb-2">
-            Deal Title *
+            Offer Title *
           </label>
           <input
             type="text"
@@ -209,7 +209,7 @@ export default function NewDealPage() {
             value={formData.description}
             onChange={handleChange}
             rows={6}
-            placeholder="Describe your deal in detail. What makes it special? What are the key benefits?"
+            placeholder="Describe your offer in detail. What makes it special? What are the key benefits?"
             className={`w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none ${
               errors.description ? 'border-error-500' : 'border-gray-300'
             }`}
@@ -238,7 +238,7 @@ export default function NewDealPage() {
             className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
           />
           <p className="mt-2 text-sm text-gray-500">
-            Add any restrictions or conditions that apply to this deal
+            Add any restrictions or conditions that apply to this offer
           </p>
         </div>
 
@@ -281,7 +281,7 @@ export default function NewDealPage() {
               className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
             <p className="mt-2 text-sm text-gray-500">
-              Where is this deal available?
+              Where is this offer available?
             </p>
           </div>
         </div>
@@ -305,7 +305,7 @@ export default function NewDealPage() {
             <p className="mt-2 text-sm text-error-600">{errors.endDate}</p>
           )}
           <p className="mt-2 text-sm text-gray-500">
-            When does this deal expire?
+            When does this offer expire?
           </p>
         </div>
 
@@ -381,7 +381,7 @@ export default function NewDealPage() {
           )}
           
           <p className="mt-2 text-sm text-gray-500">
-            Upload a high-quality image for your deal card. JPG, PNG or WebP. Max 10MB.
+            Upload a high-quality image for your offer card. JPG, PNG or WebP. Max 10MB.
           </p>
         </div>
 
@@ -406,7 +406,7 @@ export default function NewDealPage() {
             disabled={loading || imageUploading}
             className="flex-1 px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Creating...' : 'Create Deal'}
+            {loading ? 'Creating...' : 'Create Offer'}
           </button>
         </div>
       </form>

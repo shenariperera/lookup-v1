@@ -41,8 +41,8 @@ export default function TermsPage() {
               <ul className="space-y-3 text-gray-700">
                 <li><strong>"Platform"</strong> refers to the Lookup.lk website and all related services</li>
                 <li><strong>"User"</strong> refers to anyone who accesses or uses the Platform</li>
-                <li><strong>"Business Account"</strong> refers to registered businesses posting deals and offers</li>
-                <li><strong>"Content"</strong> refers to all text, images, deals, and information posted on the Platform</li>
+                <li><strong>"Business Account"</strong> refers to registered businesses posting offers and offers</li>
+                <li><strong>"Content"</strong> refers to all text, images, offers, and information posted on the Platform</li>
                 <li><strong>"We," "Us," "Our"</strong> refers to Lookup.lk and its operators</li>
               </ul>
             </div>
@@ -90,7 +90,7 @@ export default function TermsPage() {
                 When using our Platform, you agree NOT to:
               </p>
               <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
-                <li>Post false, misleading, or fraudulent deals or business information</li>
+                <li>Post false, misleading, or fraudulent offers or business information</li>
                 <li>Violate any applicable laws or regulations</li>
                 <li>Infringe on intellectual property rights of others</li>
                 <li>Upload malicious code, viruses, or harmful content</li>
@@ -104,9 +104,9 @@ export default function TermsPage() {
             </div>
           </section>
 
-          {/* Business Listings and Deals */}
+          {/* Business Listings and Offers */}
           <section className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">4. Business Listings and Deals</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">4. Business Listings and Offers</h2>
             
             <div className="space-y-6">
               <div>
@@ -121,17 +121,17 @@ export default function TermsPage() {
               <div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">4.2 Content Accuracy</h3>
                 <p className="text-gray-700 leading-relaxed">
-                  You are solely responsible for the accuracy and legality of all deals, offers, and business 
-                  information you post. You must ensure all deals are genuine, available as advertised, and 
+                  You are solely responsible for the accuracy and legality of all offers, offers, and business 
+                  information you post. You must ensure all offers are genuine, available as advertised, and 
                   comply with applicable laws.
                 </p>
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">4.3 Deal Expiration</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">4.3 Offer Expiration</h3>
                 <p className="text-gray-700 leading-relaxed">
-                  All deals must have a valid end date. Expired deals will be automatically hidden from public 
-                  view. You are responsible for keeping your deals current and removing expired offers.
+                  All offers must have a valid end date. Expired offers will be automatically hidden from public 
+                  view. You are responsible for keeping your offers current and removing expired offers.
                 </p>
               </div>
 
@@ -184,9 +184,9 @@ export default function TermsPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">6.2 Third-Party Deals</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">6.2 Third-Party Offers</h3>
                   <p className="leading-relaxed">
-                    We are not responsible for the quality, accuracy, or fulfillment of deals posted by 
+                    We are not responsible for the quality, accuracy, or fulfillment of offers posted by 
                     businesses. All transactions are between you and the business. We are not a party to these 
                     transactions.
                   </p>
@@ -285,9 +285,9 @@ export default function TermsPage() {
             <h3 className="text-xl font-bold text-gray-900 mb-4">Terms & Conditions Summary</h3>
             <ul className="space-y-2 text-gray-700">
               <li>✓ You must be 18+ to create an account</li>
-              <li>✓ You are responsible for the accuracy of your business information and deals</li>
+              <li>✓ You are responsible for the accuracy of your business information and offers</li>
               <li>✓ We reserve the right to review and remove inappropriate content</li>
-              <li>✓ Lookup.lk is a platform connecting businesses and customers; we are not responsible for deal fulfillment</li>
+              <li>✓ Lookup.lk is a platform connecting businesses and customers; we are not responsible for offer fulfillment</li>
               <li>✓ You retain ownership of your content but grant us a license to display it</li>
               <li>✓ We may suspend or terminate accounts that violate these terms</li>
               <li>✓ These terms are governed by the laws of Sri Lanka</li>

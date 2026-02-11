@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 
-export default function DealCard({ 
+export default function OfferCard({ 
   image,
   title,
   companyName,
@@ -13,7 +13,7 @@ export default function DealCard({
   
   return (
     <Card padding="none" className="group max-w-sm">
-      {/* Deal Image */}
+      {/* Offer Image */}
       <div className="relative h-52 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
         {image ? (
           <Image 
@@ -31,7 +31,7 @@ export default function DealCard({
 
       {/* Card Content */}
       <div className="p-5 space-y-4">
-        {/* Deal Title */}
+        {/* Offer Title */}
         <h3 className="text-sm font-bold text-gray-800 line-clamp-2 min-h-[3.5rem]">
           {title}
         </h3>

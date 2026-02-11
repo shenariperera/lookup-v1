@@ -82,7 +82,7 @@ export default function LoginPage() {
               Welcome back
             </h1>
             <p className="text-primary-200 text-lg leading-relaxed max-w-md">
-              Sign in to access your dashboard, manage your business listings, and keep your deals up to date.
+              Sign in to access your dashboard, manage your business listings, and keep your offers up to date.
             </p>
           </div>
 

@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 export default function DealsPage() {
   const router = useRouter();
   const [filterStatus, setFilterStatus] = useState('all');
-  const [deals, setDeals] = useState([]);
+  const [offers, setDeals] = useState([]);
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
@@ -16,37 +16,37 @@ export default function DealsPage() {
 
   async function fetchDeals() {
     try {
-      const res = await fetch('/api/deals');
+      const res = await fetch('/api/offers');
       const data = await res.json();
       setDeals(data);
     } catch (error) {
-      console.error('Failed to fetch deals:', error);
+      console.error('Failed to fetch offers:', error);
     } finally {
       setLoading(false);
     }
   }
 
-  const filteredDeals = deals.filter(deal => {
+  const filteredDeals = offers.filter(offer => {
     if (filterStatus === 'all') return true;
-    if (filterStatus === 'active') return deal.status === 'ACTIVE' && new Date(deal.endDate) > new Date();
-    if (filterStatus === 'expired') return new Date(deal.endDate) <= new Date();
-    if (filterStatus === 'disabled') return deal.status === 'DISABLED';
+    if (filterStatus === 'active') return offer.status === 'ACTIVE' && new Date(offer.endDate) > new Date();
+    if (filterStatus === 'expired') return new Date(offer.endDate) <= new Date();
+    if (filterStatus === 'disabled') return offer.status === 'DISABLED';
     return true;
   });
 
-  const getStatusColor = (deal) => {
-    if (deal.status === 'DISABLED') {
+  const getStatusColor = (offer) => {
+    if (offer.status === 'DISABLED') {
       return 'bg-error-100 text-error-800';
     }
-    if (new Date(deal.endDate) <= new Date()) {
+    if (new Date(offer.endDate) <= new Date()) {
       return 'bg-gray-100 text-gray-800';
     }
     return 'bg-success-100 text-success-800';
   };
 
-  const getStatusText = (deal) => {
-    if (deal.status === 'DISABLED') return 'Disabled';
-    if (new Date(deal.endDate) <= new Date()) return 'Expired';
+  const getStatusText = (offer) => {
+    if (offer.status === 'DISABLED') return 'Disabled';
+    if (new Date(offer.endDate) <= new Date()) return 'Expired';
     return 'Active';
   };
 
@@ -56,24 +56,24 @@ export default function DealsPage() {
   };
 
   const handleDelete = async (dealId) => {
-    if (!confirm('Are you sure you want to delete this deal? This action cannot be undone.')) {
+    if (!confirm('Are you sure you want to delete this offer? This action cannot be undone.')) {
       return;
     }
 
     try {
-      const res = await fetch(`/api/deals/${dealId}`, {
+      const res = await fetch(`/api/offers/${dealId}`, {
         method: 'DELETE',
       });
 
       if (!res.ok) {
-        throw new Error('Failed to delete deal');
+        throw new Error('Failed to delete offer');
       }
 
-      // Refresh deals list
+      // Refresh offers list
       fetchDeals();
     } catch (error) {
-      console.error('Failed to delete deal:', error);
-      alert('Failed to delete deal. Please try again.');
+      console.error('Failed to delete offer:', error);
+      alert('Failed to delete offer. Please try again.');
     }
   };
 
@@ -85,7 +85,7 @@ export default function DealsPage() {
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
           </svg>
-          <p className="mt-4 text-gray-600">Loading deals...</p>
+          <p className="mt-4 text-gray-600">Loading offers...</p>
         </div>
       </div>
     );
@@ -96,17 +96,17 @@ export default function DealsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900">My Deals</h2>
+          <h2 className="text-3xl font-bold text-gray-900">My Offers</h2>
           <p className="mt-2 text-gray-600">Manage all your offers and promotions</p>
         </div>
         <Link
-          href="/dashboard/deals/new"
+          href="/dashboard/offers/new"
           className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-md transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
-          Create New Deal
+          Create New Offer
         </Link>
       </div>
 
@@ -121,7 +121,7 @@ export default function DealsPage() {
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            All Deals ({deals.length})
+            All Offers ({offers.length})
           </button>
           <button
             onClick={() => setFilterStatus('active')}
@@ -131,7 +131,7 @@ export default function DealsPage() {
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            Active ({deals.filter(d => d.status === 'ACTIVE' && new Date(d.endDate) > new Date()).length})
+            Active ({offers.filter(d => d.status === 'ACTIVE' && new Date(d.endDate) > new Date()).length})
           </button>
           <button
             onClick={() => setFilterStatus('expired')}
@@ -141,7 +141,7 @@ export default function DealsPage() {
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            Expired ({deals.filter(d => new Date(d.endDate) <= new Date()).length})
+            Expired ({offers.filter(d => new Date(d.endDate) <= new Date()).length})
           </button>
           <button
             onClick={() => setFilterStatus('disabled')}
@@ -151,37 +151,37 @@ export default function DealsPage() {
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            Disabled ({deals.filter(d => d.status === 'DISABLED').length})
+            Disabled ({offers.filter(d => d.status === 'DISABLED').length})
           </button>
         </div>
       </div>
 
-      {/* Deals Grid */}
+      {/* Offers Grid */}
       {filteredDeals.length === 0 ? (
         <div className="bg-white border border-gray-200 rounded-md p-12 text-center">
           <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
           </svg>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No deals found</h3>
-          <p className="text-gray-600 mb-6">Get started by creating your first deal.</p>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">No offers found</h3>
+          <p className="text-gray-600 mb-6">Get started by creating your first offer.</p>
           <Link
-            href="/dashboard/deals/new"
+            href="/dashboard/offers/new"
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-md transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            Create Your First Deal
+            Create Your First Offer
           </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {filteredDeals.map((deal) => (
-            <div key={deal.id} className="bg-white border border-gray-200 rounded-md overflow-hidden">
-              {/* Deal Image */}
+          {filteredDeals.map((offer) => (
+            <div key={offer.id} className="bg-white border border-gray-200 rounded-md overflow-hidden">
+              {/* Offer Image */}
               <div className="bg-gradient-to-br from-primary-100 to-primary-200 h-48 flex items-center justify-center">
-                {deal.coverImage ? (
-                  <img src={deal.coverImage} alt={deal.title} className="w-full h-full object-cover" />
+                {offer.coverImage ? (
+                  <img src={offer.coverImage} alt={offer.title} className="w-full h-full object-cover" />
                 ) : (
                   <svg className="w-16 h-16 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -189,27 +189,27 @@ export default function DealsPage() {
                 )}
               </div>
 
-              {/* Deal Info */}
+              {/* Offer Info */}
               <div className="p-6">
                 <div className="flex items-start justify-between gap-4 mb-3">
-                  <h3 className="text-lg font-bold text-gray-900 flex-1">{deal.title}</h3>
-                  <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap ${getStatusColor(deal)}`}>
-                    {getStatusText(deal)}
+                  <h3 className="text-lg font-bold text-gray-900 flex-1">{offer.title}</h3>
+                  <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap ${getStatusColor(offer)}`}>
+                    {getStatusText(offer)}
                   </span>
                 </div>
 
-                <p className="text-sm text-gray-600 mb-4">{deal.category}</p>
+                <p className="text-sm text-gray-600 mb-4">{offer.category}</p>
 
                 {/* Stats */}
                 <div className="flex items-center gap-2 mb-4 text-sm text-gray-600">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  <span>Ends {new Date(deal.endDate).toLocaleDateString()}</span>
+                  <span>Ends {new Date(offer.endDate).toLocaleDateString()}</span>
                 </div>
 
                 {/* Expiring Soon Warning */}
-                {isExpiringSoon(deal.endDate) && deal.status === 'ACTIVE' && (
+                {isExpiringSoon(offer.endDate) && offer.status === 'ACTIVE' && (
                   <div className="mb-4 p-3 bg-warning-50 border border-warning-200 rounded-md flex items-center gap-2">
                     <svg className="w-5 h-5 text-warning-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -221,19 +221,19 @@ export default function DealsPage() {
                 {/* Actions */}
                 <div className="flex gap-3">
                   <Link
-                    href={`/dashboard/deals/${deal.id}/edit`}
+                    href={`/dashboard/offers/${offer.id}/edit`}
                     className="flex-1 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-md transition-colors text-center"
                   >
                     Edit
                   </Link>
                   <Link
-                    href={`/deals/${deal.slug}`}
+                    href={`/offers/${offer.slug}`}
                     className="flex-1 px-4 py-2 bg-white border-2 border-primary-500 text-primary-500 hover:bg-primary-50 font-medium rounded-md transition-colors text-center"
                   >
                     View
                   </Link>
                   <button
-                    onClick={() => handleDelete(deal.id)}
+                    onClick={() => handleDelete(offer.id)}
                     className="px-4 py-2 bg-white border-2 border-error-500 text-error-500 hover:bg-error-50 font-medium rounded-md transition-colors"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

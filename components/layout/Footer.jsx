@@ -14,7 +14,7 @@ export default function Footer() {
               Lookup<span className="text-primary-400">.lk</span>
             </div>
             <p className="text-sm text-gray-400 mb-4">
-              Discover the best deals and offers from businesses across Sri Lanka.
+              Discover the best offers and offers from businesses across Sri Lanka.
             </p>
             {/* Social Media Links */}
             <div className="flex gap-4">
@@ -41,8 +41,8 @@ export default function Footer() {
             <h3 className="text-white font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/deals" className="text-sm hover:text-primary-400 transition-colors">
-                  Browse Deals
+                <Link href="/offers" className="text-sm hover:text-primary-400 transition-colors">
+                  Browse Offers
                 </Link>
               </li>
               <li>
