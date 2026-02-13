@@ -1,17 +1,18 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { optimizeAndUpload, validateImageFile, getImagePreviewUrl, revokeImagePreviewUrl } from '@/lib/imageUpload';
 
-// Import react-quill-new dynamically (React 19 compatible)
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 import 'react-quill-new/dist/quill.snow.css';
 
-export default function NewOfferPage() {
+export default function EditOfferPage() {
+  const params = useParams();
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
   const [errors, setErrors] = useState({});
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -51,7 +52,6 @@ export default function NewOfferPage() {
     'Fashion & Accessories',
   ];
 
-  // Full Quill toolbar configuration
   const quillModules = {
     toolbar: [
       [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
@@ -79,6 +79,58 @@ export default function NewOfferPage() {
     'script'
   ];
 
+  useEffect(() => {
+    if (params.id) {
+      fetchOffer();
+    }
+  }, [params.id]);
+
+  async function fetchOffer() {
+    try {
+      const res = await fetch(`/api/offers/${params.id}`);
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to fetch offer');
+      }
+
+      if (data.status !== 'PENDING') {
+        setErrors({ form: 'Only pending offers can be edited. This offer is already live.' });
+        setLoading(false);
+        return;
+      }
+
+      const startDate = new Date(data.startDate);
+      const endDate = new Date(data.endDate);
+
+      setFormData({
+        title: data.title,
+        description: data.description,
+        terms: data.terms || '',
+        category: data.category,
+        startDate: startDate.toISOString().split('T')[0],
+        startTime: startDate.toTimeString().slice(0, 5),
+        endDate: endDate.toISOString().split('T')[0],
+        endTime: endDate.toTimeString().slice(0, 5),
+        coverImage: data.coverImage,
+        ctaButtonText: data.ctaButtonText || '',
+        ctaButtonLink: data.ctaButtonLink || '',
+        ctaEmail: data.ctaEmail || '',
+        originalPrice: data.originalPrice || '',
+        discountPercent: data.discountPercent || '',
+        finalPrice: data.finalPrice || '',
+      });
+
+      if (data.coverImage) {
+        setCoverPreview(data.coverImage);
+      }
+    } catch (err) {
+      setErrors({ form: err.message });
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -86,7 +138,6 @@ export default function NewOfferPage() {
       setErrors(prev => ({ ...prev, [name]: null }));
     }
 
-    // Auto-calculate final price
     if (name === 'originalPrice' || name === 'discountPercent') {
       calculateFinalPrice(
         name === 'originalPrice' ? value : formData.originalPrice,
@@ -135,10 +186,7 @@ export default function NewOfferPage() {
 
       const url = await optimizeAndUpload(file, 'offer', 'offer-images');
       
-      setFormData(prev => ({
-        ...prev,
-        coverImage: url
-      }));
+      setFormData(prev => ({ ...prev, coverImage: url }));
     } catch (error) {
       console.error('Image upload failed:', error);
       setErrors(prev => ({ ...prev, coverImage: error.message }));
@@ -152,28 +200,22 @@ export default function NewOfferPage() {
   };
 
   const removeImage = () => {
-    if (coverPreview) {
+    if (coverPreview && !coverPreview.startsWith('http')) {
       revokeImagePreviewUrl(coverPreview);
     }
-    
     setCoverPreview(null);
-    setFormData(prev => ({
-      ...prev,
-      coverImage: null
-    }));
+    setFormData(prev => ({ ...prev, coverImage: null }));
   };
 
   const validateForm = () => {
     const newErrors = {};
 
-    // Title validation
     if (!formData.title.trim()) {
       newErrors.title = 'Title is required';
     } else if (formData.title.length < 10) {
       newErrors.title = 'Title must be at least 10 characters';
     }
 
-    // Description validation
     const descriptionText = formData.description.replace(/<[^>]*>/g, '').trim();
     if (!descriptionText) {
       newErrors.description = 'Description is required';
@@ -181,28 +223,15 @@ export default function NewOfferPage() {
       newErrors.description = 'Description must be at least 50 characters';
     }
 
-    // Category validation
     if (!formData.category) {
       newErrors.category = 'Category is required';
     }
 
-    // Start date/time validation
-    if (!formData.startDate) {
-      newErrors.startDate = 'Start date is required';
-    }
-    if (!formData.startTime) {
-      newErrors.startTime = 'Start time is required';
-    }
+    if (!formData.startDate) newErrors.startDate = 'Start date is required';
+    if (!formData.startTime) newErrors.startTime = 'Start time is required';
+    if (!formData.endDate) newErrors.endDate = 'End date is required';
+    if (!formData.endTime) newErrors.endTime = 'End time is required';
 
-    // End date/time validation
-    if (!formData.endDate) {
-      newErrors.endDate = 'End date is required';
-    }
-    if (!formData.endTime) {
-      newErrors.endTime = 'End time is required';
-    }
-
-    // Validate start is before end
     if (formData.startDate && formData.startTime && formData.endDate && formData.endTime) {
       const startDateTime = new Date(`${formData.startDate}T${formData.startTime}`);
       const endDateTime = new Date(`${formData.endDate}T${formData.endTime}`);
@@ -212,12 +241,10 @@ export default function NewOfferPage() {
       }
     }
 
-    // Cover image validation
     if (!formData.coverImage) {
       newErrors.coverImage = 'Cover image is required';
     }
 
-    // CTA validation
     if (!formData.ctaButtonLink && !formData.ctaEmail) {
       newErrors.cta = 'Please provide either a CTA link or an email for inquiries';
     }
@@ -228,17 +255,6 @@ export default function NewOfferPage() {
 
     if (formData.ctaEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.ctaEmail)) {
       newErrors.ctaEmail = 'Please enter a valid email address';
-    }
-
-    // Pricing validation
-    if (formData.originalPrice && isNaN(parseFloat(formData.originalPrice))) {
-      newErrors.originalPrice = 'Please enter a valid price';
-    }
-    if (formData.discountPercent) {
-      const discount = parseFloat(formData.discountPercent);
-      if (isNaN(discount) || discount < 0 || discount > 100) {
-        newErrors.discountPercent = 'Discount must be between 0 and 100';
-      }
     }
 
     setErrors(newErrors);
@@ -253,7 +269,7 @@ export default function NewOfferPage() {
       return;
     }
 
-    setLoading(true);
+    setSaving(true);
 
     try {
       const startDateTime = new Date(`${formData.startDate}T${formData.startTime}`);
@@ -275,8 +291,8 @@ export default function NewOfferPage() {
         finalPrice: formData.finalPrice ? parseFloat(formData.finalPrice) : null,
       };
 
-      const response = await fetch('/api/offers', {
-        method: 'POST',
+      const response = await fetch(`/api/offers/${params.id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -286,31 +302,59 @@ export default function NewOfferPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to create offer');
+        throw new Error(data.message || 'Failed to update offer');
       }
       
       setShowSuccessModal(true);
     } catch (error) {
-      console.error('Failed to create offer:', error);
+      console.error('Failed to update offer:', error);
       setErrors(prev => ({ ...prev, submit: error.message }));
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <div className="text-center">
+          <svg className="animate-spin w-12 h-12 mx-auto text-primary-500" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+          </svg>
+          <p className="mt-4 text-gray-600">Loading offer...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (errors.form && !formData.title) {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-error-50 border border-error-200 rounded-md p-6">
+          <h3 className="text-lg font-bold text-error-900 mb-2">Cannot Edit This Offer</h3>
+          <p className="text-error-800 mb-6">{errors.form}</p>
+          <button
+            onClick={() => router.push('/dashboard/offers')}
+            className="px-6 py-3 bg-error-600 hover:bg-error-700 text-white font-semibold rounded-md transition-colors"
+          >
+            Back to My Offers
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header */}
         <div>
-          <h2 className="text-3xl font-bold text-gray-900">Create New Offer</h2>
-          <p className="mt-2 text-gray-600">Fill in the details below to create a new offer</p>
+          <h2 className="text-3xl font-bold text-gray-900">Edit Offer</h2>
+          <p className="mt-2 text-gray-600">Update your offer details</p>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Submit Error */}
           {errors.submit && (
             <div className="bg-error-50 border border-error-200 rounded-md p-4">
               <div className="flex items-center gap-3">
@@ -345,7 +389,7 @@ export default function NewOfferPage() {
             </p>
           </div>
 
-          {/* Description (ReactQuill) */}
+          {/* Description */}
           <div className="bg-white border border-gray-200 rounded-md p-6">
             <label className="block text-sm font-semibold text-gray-900 mb-2">
               Description <span className="text-error-500">*</span>
@@ -357,7 +401,7 @@ export default function NewOfferPage() {
                 onChange={handleDescriptionChange}
                 modules={quillModules}
                 formats={quillFormats}
-                placeholder="Describe your offer in detail. What makes it special? What are the key benefits? Include any important details customers should know..."
+                placeholder="Describe your offer in detail. What makes it special? What are the key benefits?"
                 className="bg-white"
                 style={{ minHeight: '250px' }}
               />
@@ -748,26 +792,26 @@ export default function NewOfferPage() {
             <button
               type="button"
               onClick={() => router.back()}
-              disabled={loading}
+              disabled={saving}
               className="px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold rounded-md transition-colors disabled:opacity-50 cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              disabled={loading || imageUploading}
+              disabled={saving || imageUploading}
               className="flex-1 px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
             >
-              {loading ? (
+              {saving ? (
                 <>
                   <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  <span>Creating...</span>
+                  <span>Saving...</span>
                 </>
               ) : (
-                'Create Offer'
+                'Save Changes'
               )}
             </button>
           </div>
@@ -783,20 +827,15 @@ export default function NewOfferPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">Offer Submitted!</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Offer Updated!</h3>
             <p className="text-gray-600 mb-6">
-              Your offer has been sent for admin approval. You'll be able to see the status in your dashboard and receive an email notification when it goes live.
+              Your changes have been saved successfully.
             </p>
-            <div className="bg-primary-50 border border-primary-200 rounded-md p-4 mb-6">
-              <p className="text-sm text-primary-800">
-                <strong>What's next?</strong> Our admin team will review your offer within 12-24 hours. Check your dashboard to track the approval status.
-              </p>
-            </div>
             <button
               onClick={() => router.push('/dashboard/offers')}
-              className="w-full px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-md transition-colors"
+              className="w-full px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-md transition-colors cursor-pointer"
             >
-              View My Offers
+              Back to My Offers
             </button>
           </div>
         </div>

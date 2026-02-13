@@ -6,9 +6,13 @@ import { useRouter } from 'next/navigation';
 
 export default function DealsPage() {
   const router = useRouter();
-  const [filterStatus, setFilterStatus] = useState('all');
+  const [activeTab, setActiveTab] = useState('all');
   const [offers, setDeals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, offerId: null, offerTitle: '' });
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const [editBlockedModal, setEditBlockedModal] = useState(false);
   
   useEffect(() => {
     fetchDeals();
@@ -26,28 +30,40 @@ export default function DealsPage() {
     }
   }
 
-  const filteredDeals = offers.filter(offer => {
-    if (filterStatus === 'all') return true;
-    if (filterStatus === 'active') return offer.status === 'ACTIVE' && new Date(offer.endDate) > new Date();
-    if (filterStatus === 'expired') return new Date(offer.endDate) <= new Date();
-    if (filterStatus === 'disabled') return offer.status === 'DISABLED';
-    return true;
-  });
-
-  const getStatusColor = (offer) => {
-    if (offer.status === 'DISABLED') {
-      return 'bg-error-100 text-error-800';
-    }
-    if (new Date(offer.endDate) <= new Date()) {
-      return 'bg-gray-100 text-gray-800';
-    }
-    return 'bg-success-100 text-success-800';
+  const getOfferStatus = (offer) => {
+    const isExpired = new Date(offer.endDate) < new Date();
+    if (isExpired) return 'expired';
+    return offer.status.toLowerCase();
   };
 
-  const getStatusText = (offer) => {
-    if (offer.status === 'DISABLED') return 'Disabled';
-    if (new Date(offer.endDate) <= new Date()) return 'Expired';
-    return 'Active';
+  const filteredDeals = offers.filter(offer => {
+    const status = getOfferStatus(offer);
+    if (activeTab === 'all') return true;
+    return status === activeTab;
+  });
+
+  const tabCounts = {
+    all: offers.length,
+    pending: offers.filter(o => getOfferStatus(o) === 'pending').length,
+    active: offers.filter(o => getOfferStatus(o) === 'active').length,
+    expired: offers.filter(o => getOfferStatus(o) === 'expired').length,
+  };
+
+  const getStatusBadge = (offer) => {
+    const isExpired = new Date(offer.endDate) < new Date();
+    
+    if (isExpired) {
+      return <span className="inline-flex px-2.5 py-0.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Expired</span>;
+    }
+    
+    switch (offer.status) {
+      case 'PENDING':
+        return <span className="inline-flex px-2.5 py-0.5 text-xs font-semibold rounded-full bg-warning-100 text-warning-800">Pending</span>;
+      case 'ACTIVE':
+        return <span className="inline-flex px-2.5 py-0.5 text-xs font-semibold rounded-full bg-success-100 text-success-800">Live</span>;
+      default:
+        return <span className="inline-flex px-2.5 py-0.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">{offer.status}</span>;
+    }
   };
 
   const isExpiringSoon = (endDate) => {
@@ -55,25 +71,45 @@ export default function DealsPage() {
     return daysUntilExpiry <= 7 && daysUntilExpiry > 0;
   };
 
-  const handleDelete = async (dealId) => {
-    if (!confirm('Are you sure you want to delete this offer? This action cannot be undone.')) {
+  const handleEditClick = (offer) => {
+    if (offer.status !== 'PENDING') {
+      setEditBlockedModal(true);
       return;
     }
+    router.push(`/dashboard/offers/${offer.id}/edit`);
+  };
 
+  const openDeleteModal = (offer) => {
+    setDeleteModal({ isOpen: true, offerId: offer.id, offerTitle: offer.title });
+    setDeleteConfirmText('');
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteModal({ isOpen: false, offerId: null, offerTitle: '' });
+    setDeleteConfirmText('');
+  };
+
+  const handleDelete = async () => {
+    if (deleteConfirmText.toLowerCase() !== 'delete') return;
+
+    setDeleting(true);
     try {
-      const res = await fetch(`/api/offers/${dealId}`, {
+      const res = await fetch(`/api/offers/${deleteModal.offerId}`, {
         method: 'DELETE',
       });
 
       if (!res.ok) {
-        throw new Error('Failed to delete offer');
+        const data = await res.json();
+        throw new Error(data.message || 'Failed to delete offer');
       }
 
-      // Refresh offers list
-      fetchDeals();
+      setDeals(offers.filter(o => o.id !== deleteModal.offerId));
+      closeDeleteModal();
     } catch (error) {
       console.error('Failed to delete offer:', error);
-      alert('Failed to delete offer. Please try again.');
+      alert(`Error: ${error.message}`);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -110,140 +146,260 @@ export default function DealsPage() {
         </Link>
       </div>
 
-      {/* Filters */}
-      <div className="bg-white border border-gray-200 rounded-md p-6">
-        <div className="flex flex-wrap gap-3">
-          <button
-            onClick={() => setFilterStatus('all')}
-            className={`px-4 py-2 rounded-md font-medium transition-colors ${
-              filterStatus === 'all'
-                ? 'bg-primary-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            All Offers ({offers.length})
-          </button>
-          <button
-            onClick={() => setFilterStatus('active')}
-            className={`px-4 py-2 rounded-md font-medium transition-colors ${
-              filterStatus === 'active'
-                ? 'bg-success-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            Active ({offers.filter(d => d.status === 'ACTIVE' && new Date(d.endDate) > new Date()).length})
-          </button>
-          <button
-            onClick={() => setFilterStatus('expired')}
-            className={`px-4 py-2 rounded-md font-medium transition-colors ${
-              filterStatus === 'expired'
-                ? 'bg-gray-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            Expired ({offers.filter(d => new Date(d.endDate) <= new Date()).length})
-          </button>
-          <button
-            onClick={() => setFilterStatus('disabled')}
-            className={`px-4 py-2 rounded-md font-medium transition-colors ${
-              filterStatus === 'disabled'
-                ? 'bg-error-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            Disabled ({offers.filter(d => d.status === 'DISABLED').length})
-          </button>
+      {/* Info Banner */}
+      <div className="bg-primary-50 border border-primary-200 rounded-md p-4">
+        <div className="flex items-start gap-3">
+          <svg className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div className="flex-1">
+            <p className="text-sm font-medium text-primary-900">Editing Policy</p>
+            <p className="text-sm text-primary-800 mt-1">
+              You can edit offers while <strong>Pending Approval</strong>. Once live, contact support@lookup.lk to make changes.
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Offers Grid */}
+      {/* Tabs - NO DISABLED */}
+      <div className="border-b border-gray-200">
+        <nav className="flex gap-6 overflow-x-auto">
+          {[
+            { key: 'all', label: 'All Offers' },
+            { key: 'pending', label: 'Pending' },
+            { key: 'active', label: 'Active' },
+            { key: 'expired', label: 'Expired' },
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm transition-colors cursor-pointer ${
+                activeTab === tab.key
+                  ? 'border-primary-500 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              {tab.label}
+              <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
+                activeTab === tab.key
+                  ? 'bg-primary-100 text-primary-600'
+                  : 'bg-gray-100 text-gray-600'
+              }`}>
+                {tabCounts[tab.key]}
+              </span>
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* Offers List */}
       {filteredDeals.length === 0 ? (
         <div className="bg-white border border-gray-200 rounded-md p-12 text-center">
           <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
           </svg>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No offers found</h3>
-          <p className="text-gray-600 mb-6">Get started by creating your first offer.</p>
-          <Link
-            href="/dashboard/offers/new"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-md transition-colors"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            Create Your First Offer
-          </Link>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            {activeTab === 'all' ? 'No offers yet' : `No ${activeTab} offers`}
+          </h3>
+          <p className="text-gray-600 mb-6">
+            {activeTab === 'all' 
+              ? 'Get started by creating your first offer.'
+              : `You don't have any ${activeTab} offers.`
+            }
+          </p>
+          {activeTab === 'all' && (
+            <Link
+              href="/dashboard/offers/new"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-md transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Create Your First Offer
+            </Link>
+          )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="space-y-3">
           {filteredDeals.map((offer) => (
-            <div key={offer.id} className="bg-white border border-gray-200 rounded-md overflow-hidden">
-              {/* Offer Image */}
-              <div className="bg-gradient-to-br from-primary-100 to-primary-200 h-48 flex items-center justify-center">
-                {offer.coverImage ? (
-                  <img src={offer.coverImage} alt={offer.title} className="w-full h-full object-cover" />
-                ) : (
-                  <svg className="w-16 h-16 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
+            <div
+              key={offer.id}
+              className="bg-white border border-gray-200 rounded-md p-4 hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-start gap-4">
+                {offer.coverImage && (
+                  <img
+                    src={offer.coverImage}
+                    alt={offer.title}
+                    className="w-20 h-20 object-cover rounded-md flex-shrink-0"
+                  />
                 )}
-              </div>
 
-              {/* Offer Info */}
-              <div className="p-6">
-                <div className="flex items-start justify-between gap-4 mb-3">
-                  <h3 className="text-lg font-bold text-gray-900 flex-1">{offer.title}</h3>
-                  <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap ${getStatusColor(offer)}`}>
-                    {getStatusText(offer)}
-                  </span>
-                </div>
-
-                <p className="text-sm text-gray-600 mb-4">{offer.category}</p>
-
-                {/* Stats */}
-                <div className="flex items-center gap-2 mb-4 text-sm text-gray-600">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <span>Ends {new Date(offer.endDate).toLocaleDateString()}</span>
-                </div>
-
-                {/* Expiring Soon Warning */}
-                {isExpiringSoon(offer.endDate) && offer.status === 'ACTIVE' && (
-                  <div className="mb-4 p-3 bg-warning-50 border border-warning-200 rounded-md flex items-center gap-2">
-                    <svg className="w-5 h-5 text-warning-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                    <span className="text-sm font-medium text-warning-800">Expiring soon!</span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-3 mb-1">
+                    <h3 className="text-base font-bold text-gray-900 line-clamp-1">{offer.title}</h3>
+                    {getStatusBadge(offer)}
                   </div>
-                )}
 
-                {/* Actions */}
-                <div className="flex gap-3">
-                  <Link
-                    href={`/dashboard/offers/${offer.id}/edit`}
-                    className="flex-1 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-md transition-colors text-center"
-                  >
-                    Edit
-                  </Link>
-                  <Link
-                    href={`/offers/${offer.slug}`}
-                    className="flex-1 px-4 py-2 bg-white border-2 border-primary-500 text-primary-500 hover:bg-primary-50 font-medium rounded-md transition-colors text-center"
-                  >
-                    View
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(offer.id)}
-                    className="px-4 py-2 bg-white border-2 border-error-500 text-error-500 hover:bg-error-50 font-medium rounded-md transition-colors"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
+                  <p className="text-sm text-gray-500 mb-2">{offer.category}</p>
+
+                  <div className="flex flex-wrap items-center gap-3 text-xs text-gray-600 mb-3">
+                    <span className="flex items-center gap-1">
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      Ends: {new Date(offer.endDate).toLocaleDateString()}
+                    </span>
+                  </div>
+
+                  {isExpiringSoon(offer.endDate) && offer.status === 'ACTIVE' && (
+                    <div className="mb-3 p-2 bg-warning-50 border border-warning-200 rounded-md flex items-center gap-2">
+                      <svg className="w-4 h-4 text-warning-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      <span className="text-xs font-medium text-warning-800">Expiring soon!</span>
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-2">
+                    {offer.status === 'PENDING' ? (
+                      <>
+                        <Link
+                          href={`/dashboard/offers/${offer.id}/edit`}
+                          className="px-3 py-1.5 bg-primary-500 hover:bg-primary-600 text-white text-xs font-semibold rounded-md transition-colors"
+                        >
+                          Edit
+                        </Link>
+                        <Link
+                          href={`/dashboard/offers/${offer.id}/preview`}
+                          className="px-3 py-1.5 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 text-xs font-semibold rounded-md transition-colors"
+                        >
+                          Preview
+                        </Link>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => handleEditClick(offer)}
+                          className="px-3 py-1.5 bg-gray-100 text-gray-400 text-xs font-semibold rounded-md cursor-not-allowed"
+                          title="Cannot edit live offers"
+                        >
+                          Edit
+                        </button>
+                        <Link
+                          href={`/offers/${offer.slug}`}
+                          target="_blank"
+                          className="px-3 py-1.5 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 text-xs font-semibold rounded-md transition-colors"
+                        >
+                          View Live
+                        </Link>
+                      </>
+                    )}
+                    <button
+                      onClick={() => openDeleteModal(offer)}
+                      className="px-3 py-1.5 bg-white border border-error-300 text-error-600 hover:bg-error-50 text-xs font-semibold rounded-md transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Edit Blocked Modal */}
+      {editBlockedModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-warning-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg className="w-6 h-6 text-warning-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">Editing Not Allowed</h3>
+                <p className="text-sm text-gray-600">This offer is live</p>
+              </div>
+            </div>
+
+            <p className="text-gray-700 mb-4">
+              Live offers cannot be edited. If you need changes, please contact support.
+            </p>
+            
+            <div className="bg-primary-50 border border-primary-200 rounded-md p-4 mb-6">
+              <p className="text-sm text-primary-900 font-medium mb-1">Need to make changes?</p>
+              <p className="text-sm text-primary-800">
+                Email: <a href="mailto:support@lookup.lk" className="underline font-semibold">support@lookup.lk</a>
+              </p>
+            </div>
+
+            <button
+              onClick={() => setEditBlockedModal(false)}
+              className="w-full px-4 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-md transition-colors"
+            >
+              Got it
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Modal */}
+      {deleteModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-error-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg className="w-6 h-6 text-error-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">Delete Offer</h3>
+                <p className="text-sm text-gray-600">This cannot be undone</p>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <p className="text-gray-700 mb-4">
+                Delete <strong>"{deleteModal.offerTitle}"</strong>?
+              </p>
+              
+              <div className="bg-error-50 border border-error-200 rounded-md p-3 mb-4">
+                <p className="text-sm text-error-800">
+                  Type <strong>DELETE</strong> to confirm
+                </p>
+              </div>
+
+              <input
+                type="text"
+                value={deleteConfirmText}
+                onChange={(e) => setDeleteConfirmText(e.target.value)}
+                placeholder="Type DELETE here"
+                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-error-500"
+                autoFocus
+              />
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={closeDeleteModal}
+                disabled={deleting}
+                className="flex-1 px-4 py-3 bg-white border-2 border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold rounded-md transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={deleteConfirmText.toLowerCase() !== 'delete' || deleting}
+                className="flex-1 px-4 py-3 bg-error-500 hover:bg-error-600 text-white font-semibold rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {deleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

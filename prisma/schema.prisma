@@ -48,22 +48,38 @@ model Company {
 }
 
 model Offer {
-  id          String     @id @default(cuid())
-  title       String
-  slug        String     @unique
-  description String     @db.Text
-  terms       String?    @db.Text
-  category    String
-  location    String?
-  imageUrls   String[]   @map("image_urls")
-  endDate     DateTime   @map("end_date")
-  status      DealStatus @default(ACTIVE)
-  featured    Boolean    @default(false)
-  companyId   String     @map("company_id")
-  company     Company    @relation(fields: [companyId], references: [id])
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
+  id              String     @id @default(cuid())
+  title           String
+  slug            String     @unique
+  description     String     @db.Text
+  terms           String?    @db.Text
+  category        String
+  coverImage      String?    @map("cover_image")
+  
+  // Date and time fields
+  startDate       DateTime   @map("start_date")
+  endDate         DateTime   @map("end_date")
+  
+  // CTA fields
+  ctaButtonText   String?    @map("cta_button_text")
+  ctaButtonLink   String?    @map("cta_button_link")
+  ctaEmail        String?    @map("cta_email")
+  
+  // Pricing fields (all optional)
+  originalPrice   Float?     @map("original_price")
+  discountPercent Int?       @map("discount_percent")
+  finalPrice      Float?     @map("final_price")
+  
+  status          OfferStatus @default(PENDING)
+  featured        Boolean    @default(false)
+  companyId       String     @map("company_id")
+  company         Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt       DateTime   @default(now()) @map("created_at")
+  updatedAt       DateTime   @updatedAt @map("updated_at")
 
+  @@index([companyId])
+  @@index([status])
+  @@index([endDate])
   @@map("offers")
 }
 
@@ -87,7 +103,9 @@ enum Status {
   SUSPENDED
 }
 
-enum DealStatus {
-  ACTIVE
-  DISABLED
+enum OfferStatus {
+  PENDING   
+  ACTIVE    
+  DISABLED  
+  EXPIRED 
 }
